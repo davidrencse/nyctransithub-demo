@@ -39,7 +39,7 @@ void main() {
   float fade = 1.0 - smoothstep(0.8, 3.0, length(vWorld - uTarget));
   float near = uCursorOn * exp(-pow(length(vWorld - uCursor) / 0.38, 2.0));
   vec3 col = mix(vec3(1.0), uAccent, near);
-  float a = dot * fade * (0.07 + near * 0.32) + near * 0.035;
+  float a = dot * fade * (0.11 + near * 0.32) + near * 0.035;
   outColor = vec4(col * a, a);
 }`;
 
@@ -82,7 +82,7 @@ void main() {
   float head = uReveal * vTotal;
   if (vAlong > head) discard;
   float d = abs(vSide);
-  float a = uGlow > 0.5 ? exp(-d * d * 5.0) * 0.11 : 1.0 - smoothstep(0.55, 1.0, d);
+  float a = uGlow > 0.5 ? exp(-d * d * 5.5) * 0.16 : 1.0 - smoothstep(0.55, 1.0, d);
   float headGlow = (1.0 - step(1.0, uReveal)) * smoothstep(0.25, 0.0, head - vAlong) * 1.5;
   float comet = pow(fract(vAlong * 0.55 - uTime * 0.12), 28.0) * 0.9;
   int g = int(vGroup + 0.5);
@@ -91,7 +91,7 @@ void main() {
   bool focused = abs(vGroup - uFocus) < 0.5;
   float dim = (uFocus < 0.0 || focused) ? 1.0 : 0.1;
   // Monochrome by default; a focused line shows its real route colour.
-  float grey = 0.38 + 0.5 * dot(vColor, vec3(0.3, 0.55, 0.15));
+  float grey = 0.66 + 0.34 * dot(vColor, vec3(0.3, 0.55, 0.15));
   vec3 base = mix(vec3(grey), vColor, focused ? uColorMix : 0.0);
   vec3 col = base * (1.0 + comet + headGlow) * breathe;
   float alpha = a * dim;
@@ -251,7 +251,7 @@ function samplePath(path, s) {
   ];
 }
 
-export function createTransitMap(canvas, { lines, stations, onHover, onSelect, reducedMotion }) {
+export function createTransitMap(canvas, { lines, stations, labels = [], onHover, onSelect, reducedMotion }) {
   const gl = canvas.getContext('webgl2', { antialias: true, premultipliedAlpha: true, alpha: true });
   if (!gl) throw new Error('WebGL2 unavailable');
 
@@ -295,7 +295,7 @@ export function createTransitMap(canvas, { lines, stations, onHover, onSelect, r
     for (const id of st.lines) mask |= 1 << groupIndex[lines.find((l) => l.id === id).group];
     st.mask = mask;
     const transfer = st.lines.length > 1;
-    sv.push(st.x, st.z, 1, 1, 1, transfer ? 0.03 : 0.019, mask);
+    sv.push(st.x, st.z, 1, 1, 1, transfer ? 0.038 : 0.026, mask);
   }
   const stationGeo = makeVao(gl, stationProg.prog, new Float32Array(sv), [['aPos', 2], ['aColor', 3], ['aSize', 1], ['aMask', 1]]);
 
@@ -342,10 +342,12 @@ export function createTransitMap(canvas, { lines, stations, onHover, onSelect, r
   function updateCamera() {
     const yaw = cam.yaw + parallax.x * 0.06 + (reducedMotion ? 0 : Math.sin(time * 0.07) * 0.05);
     const pitch = cam.pitch + parallax.y * 0.04;
+    // Portrait screens see less of the city across; pull back to compensate.
+    const aspect = width / height, dist = cam.dist * (aspect < 1 ? 1 / Math.sqrt(aspect) : 1);
     const eye = [
-      cam.tx + cam.dist * Math.sin(yaw) * Math.cos(pitch),
-      cam.dist * Math.sin(pitch),
-      cam.tz + cam.dist * Math.cos(yaw) * Math.cos(pitch),
+      cam.tx + dist * Math.sin(yaw) * Math.cos(pitch),
+      dist * Math.sin(pitch),
+      cam.tz + dist * Math.cos(yaw) * Math.cos(pitch),
     ];
     const proj = perspective(FOV, width / height, 0.05, 40, shift);
     viewProj = multiply(proj, lookAt(eye, [cam.tx, 0, cam.tz], [0, 1, 0]));
@@ -433,7 +435,7 @@ export function createTransitMap(canvas, { lines, stations, onHover, onSelect, r
     gl.drawElements(gl.TRIANGLES, li.length, gl.UNSIGNED_INT, 0);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.uniform1f(line.loc.uGlow, 0);
-    gl.uniform1f(line.loc.uWidth, 0.0085);
+    gl.uniform1f(line.loc.uWidth, 0.012);
     gl.drawElements(gl.TRIANGLES, li.length, gl.UNSIGNED_INT, 0);
 
     const px = (canvas.height * 0.5) / Math.tan(FOV / 2);
@@ -454,6 +456,11 @@ export function createTransitMap(canvas, { lines, stations, onHover, onSelect, r
     }
     gl.bindVertexArray(null);
 
+    for (const l of labels) {
+      const s = toScreen(l.x, l.z);
+      l.el.style.transform = s ? `translate(${s[0]}px, ${s[1]}px) translate(-50%, -50%)` : 'translate(-999px, 0)';
+      l.el.style.opacity = reveal < 1 ? reveal : '';
+    }
     if (hovered && onHover) {
       const s = toScreen(hovered.x, hovered.z);
       if (s) onHover(hovered, s[0], s[1]);
@@ -461,8 +468,8 @@ export function createTransitMap(canvas, { lines, stations, onHover, onSelect, r
     if (active) raf = requestAnimationFrame(frame);
   }
 
-  function pick(px, py) {
-    let best = null, bestD = 16;
+  function pick(px, py, radius = 16) {
+    let best = null, bestD = radius;
     for (const st of stations) {
       if (focus >= 0 && !((st.mask >> focus) & 1)) continue;
       const s = toScreen(st.x, st.z);
@@ -479,6 +486,7 @@ export function createTransitMap(canvas, { lines, stations, onHover, onSelect, r
   }
 
   canvas.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return; // no hover or parallax on touch
     const [px, py] = local(e);
     parallax.x = (px / width) * 2 - 1;
     parallax.y = (py / height) * 2 - 1;
@@ -522,7 +530,7 @@ export function createTransitMap(canvas, { lines, stations, onHover, onSelect, r
     drag = null;
     canvas.style.cursor = hovered ? 'pointer' : 'grab';
     if (wasClick) {
-      const st = pick(px, py);
+      const st = pick(px, py, e.pointerType === 'mouse' ? 16 : 28); // fingers are less precise
       if (st && onSelect) onSelect(st, px, py);
     }
   };

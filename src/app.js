@@ -1,4 +1,4 @@
-import { LINES, ROUTE_GROUPS, ROUTE_COLORS, DARK_TEXT_ROUTES, buildStations, sortRoutes } from './data/subway.js';
+import { LINES, ROUTE_GROUPS, ROUTE_COLORS, DARK_TEXT_ROUTES, BOROUGHS, buildStations, sortRoutes, project } from './data/subway.js';
 import { createTransitMap } from './gl/map.js';
 import { loadAlerts, loadOutages, statusByRoute, STATUS_RANK } from './live.js';
 import { LANGUAGES, t, tIn, setLang, getLang, initialLang, onLangChange } from './i18n.js';
@@ -77,8 +77,16 @@ const isDisrupted = (s) => STATUS_RANK[s] >= STATUS_RANK.planned;
 const stations = buildStations();
 let map = null;
 try {
+  const labels = BOROUGHS.map(([name, lat, lon]) => {
+    const el = document.createElement('span');
+    el.className = 'map-label';
+    el.textContent = name;
+    $('.map-stage').append(el);
+    const [x, z] = project(lat, lon);
+    return { el, x, z };
+  });
   map = createTransitMap($('#gl'), {
-    lines: LINES, stations, reducedMotion,
+    lines: LINES, stations, labels, reducedMotion,
     onHover(st, x, y) {
       const tip = $('#tooltip');
       if (!st) { tip.hidden = true; return; }
@@ -489,9 +497,17 @@ function renderAll() {
   $('#footer-mode').textContent = usingFirebase ? '' : t('auth.demo');
 }
 
-// ---------- nav background once the page scrolls
+// ---------- nav background once the page scrolls, and the active tab
 const nav = $('#nav');
 addEventListener('scroll', () => nav.classList.toggle('is-solid', scrollY > 24), { passive: true });
+const tabs = $$('.tabbar [data-tab]');
+const tabObserver = new IntersectionObserver((entries) => {
+  for (const e of entries) {
+    if (!e.isIntersecting) continue;
+    tabs.forEach((a) => a.setAttribute('aria-current', a.dataset.tab === e.target.id));
+  }
+}, { rootMargin: '-45% 0px -50% 0px' });
+['map', 'status', 'access', 'saved'].forEach((id) => tabObserver.observe(document.getElementById(id)));
 
 // ---------- boot
 setLang(initialLang());

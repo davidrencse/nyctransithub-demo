@@ -305,6 +305,14 @@ export const LINES = [
   },
 ];
 
+// Placed away from the trunk lines so they don't cover stations.
+export const BOROUGHS = [
+  ['Manhattan', 40.795, -74.012],
+  ['The Bronx', 40.852, -73.862],
+  ['Queens', 40.722, -73.875],
+  ['Brooklyn', 40.636, -73.945],
+];
+
 // Equirectangular projection centred on Midtown, scaled so the city spans
 // roughly -1..1 world units on each axis.
 const LAT0 = 40.735, LON0 = -73.955, K = Math.cos((LAT0 * Math.PI) / 180), SCALE = 11;
@@ -312,8 +320,9 @@ export function project(lat, lon) {
   return [(lon - LON0) * K * SCALE, -(lat - LAT0) * SCALE];
 }
 
-// Stops within ~250 m of each other are one station complex.
-const MERGE = 0.0025 * SCALE;
+// Stops within ~160 m of each other are one station complex. Wider merges
+// swallow neighbours like Jay St–MetroTech into Borough Hall.
+const MERGE = 0.0015 * SCALE;
 
 export function buildStations() {
   const stations = [];
