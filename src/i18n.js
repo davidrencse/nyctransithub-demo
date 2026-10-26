@@ -47,6 +47,7 @@ const STRINGS = {
     'search.placeholder': 'Search stations and lines', 'search.empty': 'No station or line matches “{q}”.',
     'search.lines': 'Lines', 'search.stations': 'Stations',
     'footer.data': 'Data from the MTA’s public feeds.', 'footer.disclaimer': 'Not affiliated with the Metropolitan Transportation Authority.',
+    'reviews.title': "What riders say", 'reviews.note': "From Google reviews. These are riders’ opinions, not live service status.", 'reviews.loading': "Loading Google reviews…", 'reviews.none': "No Google reviews for this station yet.", 'reviews.error': "Couldn’t load Google reviews. Check the API key in google-config.js.", 'reviews.delays': "{n} of the {total} latest reviews mention delays or long waits.", 'reviews.noDelays': "None of the {total} latest reviews mention delays.", 'reviews.open': "Open in Google Maps",
     'time.now': 'just now', 'time.min': '{n} min ago', 'time.hr': '{n} hr ago',
   },
   es: {
@@ -85,6 +86,7 @@ const STRINGS = {
     'search.placeholder': 'Buscar estaciones y líneas', 'search.empty': 'Ninguna estación o línea coincide con “{q}”.',
     'search.lines': 'Líneas', 'search.stations': 'Estaciones',
     'footer.data': 'Datos de los canales públicos de la MTA.', 'footer.disclaimer': 'Sin afiliación con la Autoridad Metropolitana de Transporte.',
+    'reviews.title': "Lo que dicen los pasajeros", 'reviews.note': "De reseñas de Google. Son opiniones de pasajeros, no el estado del servicio en vivo.", 'reviews.loading': "Cargando reseñas de Google…", 'reviews.none': "Esta estación aún no tiene reseñas en Google.", 'reviews.error': "No se pudieron cargar las reseñas de Google.", 'reviews.delays': "{n} de las {total} reseñas más recientes mencionan retrasos o esperas largas.", 'reviews.noDelays': "Ninguna de las {total} reseñas más recientes menciona retrasos.", 'reviews.open': "Abrir en Google Maps",
     'time.now': 'ahora', 'time.min': 'hace {n} min', 'time.hr': 'hace {n} h',
   },
   zh: {
@@ -123,6 +125,7 @@ const STRINGS = {
     'search.placeholder': '搜索车站和线路', 'search.empty': '没有与“{q}”匹配的车站或线路。',
     'search.lines': '线路', 'search.stations': '车站',
     'footer.data': '数据来自 MTA 公开数据源。', 'footer.disclaimer': '与大都会运输署无隶属关系。',
+    'reviews.title': "乘客评价", 'reviews.note': "来自 Google 评论，仅代表乘客个人看法，并非实时运营状态。", 'reviews.loading': "正在加载 Google 评论…", 'reviews.none': "此车站暂无 Google 评论。", 'reviews.error': "无法加载 Google 评论。", 'reviews.delays': "最新 {total} 条评论中有 {n} 条提到延误或久等。", 'reviews.noDelays': "最新 {total} 条评论均未提到延误。", 'reviews.open': "在 Google 地图中打开",
     'time.now': '刚刚', 'time.min': '{n} 分钟前', 'time.hr': '{n} 小时前',
   },
   ru: {
@@ -161,6 +164,7 @@ const STRINGS = {
     'search.placeholder': 'Поиск станций и линий', 'search.empty': 'Нет станций или линий по запросу «{q}».',
     'search.lines': 'Линии', 'search.stations': 'Станции',
     'footer.data': 'Данные из открытых источников MTA.', 'footer.disclaimer': 'Не связано с Управлением городского транспорта.',
+    'reviews.title': "Что говорят пассажиры", 'reviews.note': "Из отзывов Google. Это мнения пассажиров, а не текущий статус движения.", 'reviews.loading': "Загрузка отзывов Google…", 'reviews.none': "У этой станции пока нет отзывов в Google.", 'reviews.error': "Не удалось загрузить отзывы Google.", 'reviews.delays': "{n} из {total} последних отзывов упоминают задержки или долгое ожидание.", 'reviews.noDelays': "Ни один из {total} последних отзывов не упоминает задержки.", 'reviews.open': "Открыть в Google Картах",
     'time.now': 'только что', 'time.min': '{n} мин назад', 'time.hr': '{n} ч назад',
   },
   ko: {
@@ -199,6 +203,7 @@ const STRINGS = {
     'search.placeholder': '역과 노선 검색', 'search.empty': '“{q}”와 일치하는 역이나 노선이 없습니다.',
     'search.lines': '노선', 'search.stations': '역',
     'footer.data': 'MTA 공개 피드 데이터.', 'footer.disclaimer': '메트로폴리탄 교통공사와 관련이 없습니다.',
+    'reviews.title': "승객 후기", 'reviews.note': "Google 리뷰에서 가져온 승객 의견이며, 실시간 운행 정보가 아닙니다.", 'reviews.loading': "Google 리뷰를 불러오는 중…", 'reviews.none': "이 역에는 아직 Google 리뷰가 없습니다.", 'reviews.error': "Google 리뷰를 불러오지 못했습니다.", 'reviews.delays': "최근 리뷰 {total}개 중 {n}개가 지연이나 긴 대기를 언급합니다.", 'reviews.noDelays': "최근 리뷰 {total}개 중 지연을 언급한 리뷰가 없습니다.", 'reviews.open': "Google 지도에서 열기",
     'time.now': '방금', 'time.min': '{n}분 전', 'time.hr': '{n}시간 전',
   },
   ht: {
@@ -237,6 +242,7 @@ const STRINGS = {
     'search.placeholder': 'Chèche estasyon ak liy', 'search.empty': 'Pa gen estasyon oswa liy ki koresponn ak “{q}”.',
     'search.lines': 'Liy', 'search.stations': 'Estasyon',
     'footer.data': 'Done ki soti nan sous piblik MTA yo.', 'footer.disclaimer': 'Pa afilye ak Metropolitan Transportation Authority.',
+    'reviews.title': "Sa pasaje yo di", 'reviews.note': "Soti nan revi Google. Se opinyon pasaje, se pa estati sèvis an dirèk.", 'reviews.loading': "N ap chaje revi Google yo…", 'reviews.none': "Estasyon sa a poko gen revi sou Google.", 'reviews.error': "Nou pa t ka chaje revi Google yo.", 'reviews.delays': "{n} sou {total} dènye revi pale de reta oswa long tan datant.", 'reviews.noDelays': "Okenn nan {total} dènye revi yo pa pale de reta.", 'reviews.open': "Louvri nan Google Maps",
     'time.now': 'kounye a', 'time.min': 'sa gen {n} min', 'time.hr': 'sa gen {n} è',
   },
 };

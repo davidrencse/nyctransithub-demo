@@ -332,7 +332,7 @@ export function buildStations() {
       const [x, z] = project(lat, lon);
       let st = stations.find((s) => Math.hypot(s.x - x, s.z - z) < MERGE);
       if (!st) {
-        st = { id: stations.length, name, x, z, routes: new Set(), lines: new Set() };
+        st = { id: stations.length, name, lat, lon, x, z, routes: new Set(), lines: new Set() };
         stations.push(st);
       }
       line.routes.forEach((r) => st.routes.add(r));

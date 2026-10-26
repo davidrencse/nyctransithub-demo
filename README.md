@@ -21,6 +21,16 @@ python -m http.server 4317
 
 Then open http://localhost:4317.
 
+## Rider reviews (Google)
+
+The station card can show recent Google reviews for that station. It flags reviews that mention delays, long waits, or skipped stops, and it re-checks every 10 minutes while the page is open. Reviews are riders' opinions, not live service status. Google returns at most 5 reviews per place, and they can be days or months old. The live delay status comes from the MTA feed.
+
+1. In Google Cloud, enable **Maps JavaScript API** and **Places API (New)**.
+2. Create an API key restricted to your site's HTTP referrers.
+3. Paste it into `google-config.js`.
+
+Each station opened costs one Text Search and one Place Details call with reviews, both billed by Google. Leave the key empty to hide the section.
+
 ## Firebase
 
 1. Create a Firebase project and add a web app.

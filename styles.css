@@ -273,6 +273,26 @@ h1 {
 .station-card li .dot { margin-top: 7px; }
 .station-card .btn { margin-top: 14px; width: 100%; }
 
+/* rider reviews inside the station card */
+.station-card { max-height: calc(100% - 120px); overflow-y: auto; overscroll-behavior: contain; }
+.reviews { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: grid; gap: 10px; font-size: 13px; }
+.reviews h4 { margin: 0; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 500; color: var(--fg); }
+.review-score { font-weight: 400; color: var(--fg-2); font-variant-numeric: tabular-nums; }
+.stars { color: var(--fg); letter-spacing: 1px; font-size: 11px; }
+.stars span { color: var(--fg-4); }
+.review-signal { display: flex; align-items: center; gap: 8px; color: var(--fg-2); }
+.review-signal[data-on='true'] { color: var(--warn); }
+.review-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.station-card .review-list li { display: block; }
+.review-meta { display: flex; align-items: center; gap: 8px; color: var(--fg-3); font-size: 12px; margin-bottom: 4px; }
+.review-meta a { color: var(--fg-2); }
+.review-meta a:hover { color: var(--fg); }
+.review-list p { color: var(--fg-2); line-height: 1.5; }
+.review-list mark { background: rgba(242, 201, 76, 0.16); color: var(--warn); border-radius: 3px; padding: 0 2px; }
+.review-foot { color: var(--fg-3); font-size: 12px; line-height: 1.45; }
+.review-foot a { color: var(--fg-2); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--fg-4); }
+.google-attr { font: 500 11px/1 Roboto, Arial, sans-serif; color: var(--fg-3); }
+
 /* ---------- sections */
 .section { position: relative; max-width: var(--max); margin: 0 auto; padding: 120px var(--gutter) 0; }
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }

@@ -3,6 +3,7 @@ import { createTransitMap } from './gl/map.js';
 import { loadAlerts, loadOutages, statusByRoute, STATUS_RANK } from './live.js';
 import { LANGUAGES, t, tIn, setLang, getLang, initialLang, onLangChange } from './i18n.js';
 import { initAuth, signIn, signUp, signInWithGoogle, signOut, usingFirebase } from './auth.js';
+import { reviewsEnabled, stationReviews } from './reviews.js';
 
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
@@ -164,8 +165,48 @@ function openStation(st) {
         : `<li><span class="dot" data-status="good"></span><span>${esc(t('status.good'))}</span></li>`}
       ${outs.map((o) => `<li><span class="dot" data-status="delays"></span><span>${esc(o.serving)}</span></li>`).join('')}
     </ul>
-    <button class="btn ${isSaved ? 'btn-ghost' : 'btn-light'} btn-sm" type="button" data-save>${esc(isSaved ? t('map.saved') : t('map.save'))}</button>`;
+    <button class="btn ${isSaved ? 'btn-ghost' : 'btn-light'} btn-sm" type="button" data-save>${esc(isSaved ? t('map.saved') : t('map.save'))}</button>
+    ${reviewsEnabled ? `<section class="reviews" aria-live="polite"><p class="meta">${esc(t('reviews.loading'))}</p></section>` : ''}`;
   card.hidden = false;
+  if (reviewsEnabled) loadReviews(st);
+}
+
+async function loadReviews(st) {
+  const el = () => (state.selected === st ? $('#station-card .reviews') : null);
+  try {
+    const data = await stationReviews(st);
+    if (!el()) return; // another station was opened meanwhile
+    el().innerHTML = renderReviews(data);
+  } catch (err) {
+    console.warn('Reviews unavailable', err);
+    if (el()) el().innerHTML = `<p class="meta">${esc(t('reviews.error'))}</p>`;
+  }
+}
+
+function stars(n) {
+  const full = Math.round(n || 0);
+  return `<span class="stars" aria-label="${n} / 5">${'★'.repeat(full)}<span>${'★'.repeat(5 - full)}</span></span>`;
+}
+
+function renderReviews(data) {
+  if (!data.reviews.length) return `<h4>${esc(t('reviews.title'))}</h4><p class="meta">${esc(t('reviews.none'))}</p>`;
+  const signal = data.delayMentions
+    ? `<p class="review-signal" data-on="true"><span class="dot" data-status="delays"></span>${esc(t('reviews.delays', { n: data.delayMentions, total: data.reviews.length }))}</p>`
+    : `<p class="review-signal"><span class="dot" data-status="good"></span>${esc(t('reviews.noDelays', { total: data.reviews.length }))}</p>`;
+  const body = (r) => {
+    const text = esc(r.text.length > 220 ? r.text.slice(0, 220).trimEnd() + '…' : r.text);
+    return r.delayWord ? text.replace(new RegExp(`\\b(${r.delayWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'i'), '<mark>$1</mark>') : text;
+  };
+  return `
+    <h4>${esc(t('reviews.title'))}${data.rating ? ` <span class="review-score">${data.rating.toFixed(1)} ${stars(data.rating)} <span class="meta">(${data.count.toLocaleString()})</span></span>` : ''}</h4>
+    ${signal}
+    <ol class="review-list">${data.reviews.slice(0, 3).map((r) => `
+      <li>
+        <div class="review-meta">${stars(r.rating)}<span>${r.authorUrl ? `<a href="${esc(r.authorUrl)}" target="_blank" rel="noopener">${esc(r.author)}</a>` : esc(r.author)}</span><span>${esc(r.when || '')}</span></div>
+        <p>${body(r)}</p>
+      </li>`).join('')}</ol>
+    <p class="review-foot"><span>${esc(t('reviews.note'))}</span>${data.url ? ` <a href="${esc(data.url)}" target="_blank" rel="noopener">${esc(t('reviews.open'))}</a>` : ''}</p>
+    <p class="google-attr">Google Maps</p>`;
 }
 $('#station-card').addEventListener('click', (e) => {
   if (e.target.closest('[data-close]')) { $('#station-card').hidden = true; state.selected = null; return; }
