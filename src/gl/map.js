@@ -1,7 +1,8 @@
 // WebGL2 subway map: glowing route ribbons on a tilted dot-grid ground plane,
 // station markers, and trains running between stops.
 
-import { ROUTE_GROUPS } from '../data/subway.js';
+import { ROUTE_GROUPS, project } from '../data/subway.js';
+import { LAND, NJ } from '../data/land.js';
 import { perspective, lookAt, multiply, invert, transform } from './math.js';
 
 const FOV = (34 * Math.PI) / 180;
@@ -29,17 +30,23 @@ uniform vec2 uTarget;
 uniform vec2 uCursor;
 uniform float uCursorOn;
 uniform vec3 uAccent;
+uniform sampler2D uLand; // r: land, g: shoreline, b: soft halo around land
+uniform float uLandBounds;
 out vec4 outColor;
 void main() {
+  vec3 land = texture(uLand, (vWorld + uLandBounds) / (2.0 * uLandBounds)).rgb;
   float spacing = 0.045;
   vec2 cell = fract(vWorld / spacing) - 0.5;
   float d = length(cell) * spacing;
   float aa = fwidth(d) * 1.2;
   float dot = 1.0 - smoothstep(0.0028 - aa, 0.0028 + aa, d);
-  float fade = 1.0 - smoothstep(0.8, 3.0, length(vWorld - uTarget));
+  float fade = 1.0 - smoothstep(1.4, 4.2, length(vWorld - uTarget));
   float near = uCursorOn * exp(-pow(length(vWorld - uCursor) / 0.38, 2.0));
   vec3 col = mix(vec3(1.0), uAccent, near);
-  float a = dot * fade * (0.11 + near * 0.32) + near * 0.035;
+  // Land reads as lit ground with a bright shoreline; water stays black.
+  float a = land.r * 0.15 + land.g * 0.5 + land.b * 0.05;
+  a += dot * (0.05 + land.r * 0.17 + near * 0.3);
+  a = a * fade + near * 0.03;
   outColor = vec4(col * a, a);
 }`;
 
@@ -202,6 +209,48 @@ function displayColor(hex) {
   return c;
 }
 
+const LAND_BOUNDS = 3.2; // the texture covers world -B..B on both axes
+
+// Rasterise the shoreline polygons once into a texture the ground shader samples.
+function landTexture(gl) {
+  const S = 2048;
+  const c = document.createElement('canvas');
+  c.width = c.height = S;
+  const ctx = c.getContext('2d');
+  const path = new Path2D();
+  for (const ring of [...LAND.flatMap((b) => b.rings), NJ]) {
+    for (let i = 0; i < ring.length; i += 2) {
+      const [x, z] = project(ring[i + 1], ring[i]);
+      const px = ((x + LAND_BOUNDS) / (2 * LAND_BOUNDS)) * S, py = ((z + LAND_BOUNDS) / (2 * LAND_BOUNDS)) * S;
+      i ? path.lineTo(px, py) : path.moveTo(px, py);
+    }
+    path.closePath();
+  }
+  ctx.filter = 'blur(14px)';
+  ctx.fillStyle = '#0000ff';
+  ctx.fill(path, 'evenodd');
+  ctx.filter = 'none';
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = '#ff0000';
+  ctx.fill(path, 'evenodd');
+  ctx.strokeStyle = '#00ff00';
+  ctx.lineWidth = 2.4;
+  ctx.lineJoin = 'round';
+  ctx.stroke(path);
+
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+  gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  const aniso = gl.getExtension('EXT_texture_filter_anisotropic');
+  if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+  return tex;
+}
+
 function catmullRom(points, steps) {
   const out = [];
   const n = points.length;
@@ -262,6 +311,7 @@ export function createTransitMap(canvas, { lines, stations, labels = [], onHover
   const ground = compile(gl, GROUND_VS, GROUND_FS);
   const G = 6;
   const groundGeo = makeVao(gl, ground.prog, new Float32Array([-G, -G, G, -G, -G, G, G, G]), [['aPos', 2]]);
+  const landTex = landTexture(gl);
 
   // ---- route ribbons
   const line = compile(gl, LINE_VS, LINE_FS);
@@ -418,6 +468,10 @@ export function createTransitMap(canvas, { lines, stations, labels = [], onHover
     gl.uniform2f(ground.loc.uCursor, cursor.x, cursor.z);
     gl.uniform1f(ground.loc.uCursorOn, cursor.on);
     gl.uniform3f(ground.loc.uAccent, 1, 1, 1);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, landTex);
+    gl.uniform1i(ground.loc.uLand, 0);
+    gl.uniform1f(ground.loc.uLandBounds, LAND_BOUNDS);
     gl.bindVertexArray(groundGeo.vao);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
