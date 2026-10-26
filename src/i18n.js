@@ -1,0 +1,285 @@
+// UI strings in the languages most spoken across New York City.
+// MTA alert text itself is published in English only.
+
+export const LANGUAGES = [
+  { code: 'en', name: 'English' },
+  { code: 'es', name: 'Español' },
+  { code: 'zh', name: '中文' },
+  { code: 'ru', name: 'Русский' },
+  { code: 'ko', name: '한국어' },
+  { code: 'ht', name: 'Kreyòl ayisyen' },
+];
+
+const STRINGS = {
+  en: {
+    'nav.map': 'Map', 'nav.status': 'Status', 'nav.access': 'Accessibility', 'nav.saved': 'Saved',
+    'nav.search': 'Search stations', 'nav.signin': 'Sign in', 'nav.signout': 'Sign out', 'nav.language': 'Language',
+    'hero.live': 'Live service alerts from the MTA',
+    'hero.title': 'Know the subway before you tap in.',
+    'hero.lede': 'Service changes, elevator outages, and the stations you use, on one map of New York City.',
+    'hero.find': 'Find a station', 'hero.seeStatus': 'See service status',
+    'map.lines': 'Lines', 'map.showAll': 'Show all lines', 'map.zoomIn': 'Zoom in', 'map.zoomOut': 'Zoom out',
+    'map.note': 'Alerts are live. Train positions are simulated.', 'map.ctrlZoom': 'Hold Ctrl and scroll to zoom the map',
+    'map.save': 'Save station', 'map.saved': 'Saved', 'map.noWebgl': 'This browser can’t draw the map. The rest of the page still works.',
+    'status.title': 'Service status', 'status.summary': 'Good service on {n} of {total} lines.',
+    'status.updated': 'Updated {time}', 'status.refresh': 'Refresh', 'status.all': 'All lines', 'status.disrupted': 'Disrupted',
+    'status.sample': 'Couldn’t reach the MTA feed, so this is sample data. It retries every minute.',
+    'status.good': 'Good service', 'status.notice': 'Notice', 'status.planned': 'Planned work', 'status.changes': 'Service change',
+    'status.delays': 'Delays', 'status.suspended': 'Suspended', 'status.noneDisrupted': 'Every line is running normally.',
+    'status.englishOnly': 'Alert text comes from the MTA in English.',
+    'access.title': 'Elevators and escalators',
+    'access.lede': 'Outages reported by station staff, refreshed every few minutes.',
+    'access.summary': '{e} elevators and {s} escalators are out of service right now.',
+    'access.filter': 'Filter by station or line', 'access.all': 'All', 'access.elevators': 'Elevators', 'access.escalators': 'Escalators',
+    'access.back': 'Expected back {when}', 'access.none': 'No outages match that filter.', 'access.ada': 'Step-free route affected',
+    'saved.title': 'Your stations', 'saved.empty': 'Save a station from the map or search, and its lines and elevators show up here.',
+    'saved.local': 'Saved on this device. Sign in to keep them on every device.',
+    'saved.lines': 'Your lines', 'saved.alerts': 'Notifications',
+    'saved.notifyDelays': 'Delays and suspensions on my lines', 'saved.notifyPlanned': 'Planned work on my lines',
+    'saved.notifyElevators': 'Elevator outages at my stations',
+    'saved.allow': 'Allow notifications', 'saved.blocked': 'Notifications are blocked in this browser’s site settings.',
+    'saved.remove': 'Remove',
+    'lang.title': 'Use Transit Hub in your language', 'lang.prompt': 'Where are you headed?',
+    'auth.signin': 'Sign in', 'auth.signup': 'Create account', 'auth.email': 'Email', 'auth.password': 'Password',
+    'auth.google': 'Continue with Google', 'auth.toSignup': 'New here? Create an account', 'auth.toSignin': 'Have an account? Sign in',
+    'auth.demo': 'Firebase isn’t configured yet, so accounts are kept in this browser only.',
+    'auth.title': 'Keep your stations on every device',
+    'search.placeholder': 'Search stations and lines', 'search.empty': 'No station or line matches “{q}”.',
+    'search.lines': 'Lines', 'search.stations': 'Stations',
+    'footer.data': 'Data from the MTA’s public feeds.', 'footer.disclaimer': 'Not affiliated with the Metropolitan Transportation Authority.',
+    'time.now': 'just now', 'time.min': '{n} min ago', 'time.hr': '{n} hr ago',
+  },
+  es: {
+    'nav.map': 'Mapa', 'nav.status': 'Estado', 'nav.access': 'Accesibilidad', 'nav.saved': 'Guardado',
+    'nav.search': 'Buscar estaciones', 'nav.signin': 'Iniciar sesión', 'nav.signout': 'Cerrar sesión', 'nav.language': 'Idioma',
+    'hero.live': 'Avisos de servicio en vivo de la MTA',
+    'hero.title': 'Conoce el metro antes de pasar la tarjeta.',
+    'hero.lede': 'Cambios de servicio, ascensores fuera de servicio y tus estaciones, en un solo mapa de Nueva York.',
+    'hero.find': 'Buscar una estación', 'hero.seeStatus': 'Ver el estado del servicio',
+    'map.lines': 'Líneas', 'map.showAll': 'Mostrar todas', 'map.zoomIn': 'Acercar', 'map.zoomOut': 'Alejar',
+    'map.note': 'Los avisos son en vivo. La posición de los trenes es simulada.', 'map.ctrlZoom': 'Mantén Ctrl y desplázate para hacer zoom',
+    'map.save': 'Guardar estación', 'map.saved': 'Guardada', 'map.noWebgl': 'Este navegador no puede dibujar el mapa. El resto de la página funciona.',
+    'status.title': 'Estado del servicio', 'status.summary': 'Buen servicio en {n} de {total} líneas.',
+    'status.updated': 'Actualizado {time}', 'status.refresh': 'Actualizar', 'status.all': 'Todas', 'status.disrupted': 'Con problemas',
+    'status.sample': 'No se pudo conectar con la MTA; estos son datos de ejemplo. Se reintenta cada minuto.',
+    'status.good': 'Buen servicio', 'status.notice': 'Aviso', 'status.planned': 'Obras programadas', 'status.changes': 'Cambio de servicio',
+    'status.delays': 'Retrasos', 'status.suspended': 'Suspendido', 'status.noneDisrupted': 'Todas las líneas funcionan con normalidad.',
+    'status.englishOnly': 'La MTA publica los avisos solo en inglés.',
+    'access.title': 'Ascensores y escaleras mecánicas',
+    'access.lede': 'Averías reportadas por el personal de las estaciones, actualizadas cada pocos minutos.',
+    'access.summary': '{e} ascensores y {s} escaleras mecánicas están fuera de servicio ahora.',
+    'access.filter': 'Filtrar por estación o línea', 'access.all': 'Todo', 'access.elevators': 'Ascensores', 'access.escalators': 'Escaleras',
+    'access.back': 'Vuelve {when}', 'access.none': 'Ninguna avería coincide con el filtro.', 'access.ada': 'Afecta la ruta sin escalones',
+    'saved.title': 'Tus estaciones', 'saved.empty': 'Guarda una estación desde el mapa o la búsqueda y aquí verás sus líneas y ascensores.',
+    'saved.local': 'Guardado en este dispositivo. Inicia sesión para tenerlas en todos.',
+    'saved.lines': 'Tus líneas', 'saved.alerts': 'Notificaciones',
+    'saved.notifyDelays': 'Retrasos y suspensiones en mis líneas', 'saved.notifyPlanned': 'Obras programadas en mis líneas',
+    'saved.notifyElevators': 'Ascensores fuera de servicio en mis estaciones',
+    'saved.allow': 'Permitir notificaciones', 'saved.blocked': 'Las notificaciones están bloqueadas en la configuración del sitio.',
+    'saved.remove': 'Quitar',
+    'lang.title': 'Usa Transit Hub en tu idioma', 'lang.prompt': '¿A dónde vas?',
+    'auth.signin': 'Iniciar sesión', 'auth.signup': 'Crear cuenta', 'auth.email': 'Correo', 'auth.password': 'Contraseña',
+    'auth.google': 'Continuar con Google', 'auth.toSignup': '¿Eres nuevo? Crea una cuenta', 'auth.toSignin': '¿Ya tienes cuenta? Inicia sesión',
+    'auth.demo': 'Firebase aún no está configurado; las cuentas se guardan solo en este navegador.',
+    'auth.title': 'Tus estaciones en todos tus dispositivos',
+    'search.placeholder': 'Buscar estaciones y líneas', 'search.empty': 'Ninguna estación o línea coincide con “{q}”.',
+    'search.lines': 'Líneas', 'search.stations': 'Estaciones',
+    'footer.data': 'Datos de los canales públicos de la MTA.', 'footer.disclaimer': 'Sin afiliación con la Autoridad Metropolitana de Transporte.',
+    'time.now': 'ahora', 'time.min': 'hace {n} min', 'time.hr': 'hace {n} h',
+  },
+  zh: {
+    'nav.map': '地图', 'nav.status': '运营状态', 'nav.access': '无障碍', 'nav.saved': '收藏',
+    'nav.search': '搜索车站', 'nav.signin': '登录', 'nav.signout': '退出', 'nav.language': '语言',
+    'hero.live': 'MTA 实时服务通告',
+    'hero.title': '刷卡进站前，先了解地铁。',
+    'hero.lede': '服务变更、电梯停运和你常用的车站，尽在一张纽约地图上。',
+    'hero.find': '查找车站', 'hero.seeStatus': '查看运营状态',
+    'map.lines': '线路', 'map.showAll': '显示全部线路', 'map.zoomIn': '放大', 'map.zoomOut': '缩小',
+    'map.note': '通告为实时数据，列车位置为模拟。', 'map.ctrlZoom': '按住 Ctrl 并滚动以缩放地图',
+    'map.save': '收藏车站', 'map.saved': '已收藏', 'map.noWebgl': '此浏览器无法绘制地图，页面其他功能仍可使用。',
+    'status.title': '运营状态', 'status.summary': '{total} 条线路中有 {n} 条运行正常。',
+    'status.updated': '更新于 {time}', 'status.refresh': '刷新', 'status.all': '全部线路', 'status.disrupted': '受影响',
+    'status.sample': '无法连接 MTA 数据源，当前为示例数据。每分钟自动重试。',
+    'status.good': '运行正常', 'status.notice': '通知', 'status.planned': '计划施工', 'status.changes': '服务变更',
+    'status.delays': '延误', 'status.suspended': '暂停', 'status.noneDisrupted': '所有线路运行正常。',
+    'status.englishOnly': 'MTA 通告内容仅提供英文。',
+    'access.title': '电梯与扶梯',
+    'access.lede': '由车站工作人员报告的停运信息，每隔几分钟更新。',
+    'access.summary': '目前有 {e} 部电梯和 {s} 部扶梯停运。',
+    'access.filter': '按车站或线路筛选', 'access.all': '全部', 'access.elevators': '电梯', 'access.escalators': '扶梯',
+    'access.back': '预计 {when} 恢复', 'access.none': '没有符合筛选条件的停运。', 'access.ada': '影响无障碍通道',
+    'saved.title': '我的车站', 'saved.empty': '在地图或搜索中收藏车站，这里会显示它的线路和电梯情况。',
+    'saved.local': '已保存在此设备。登录后可在所有设备上同步。',
+    'saved.lines': '我的线路', 'saved.alerts': '通知',
+    'saved.notifyDelays': '我的线路出现延误或暂停', 'saved.notifyPlanned': '我的线路有计划施工',
+    'saved.notifyElevators': '我的车站电梯停运',
+    'saved.allow': '允许通知', 'saved.blocked': '此浏览器的网站设置已阻止通知。',
+    'saved.remove': '移除',
+    'lang.title': '用你的语言使用 Transit Hub', 'lang.prompt': '你要去哪里？',
+    'auth.signin': '登录', 'auth.signup': '创建账户', 'auth.email': '电子邮箱', 'auth.password': '密码',
+    'auth.google': '使用 Google 继续', 'auth.toSignup': '第一次使用？创建账户', 'auth.toSignin': '已有账户？登录',
+    'auth.demo': '尚未配置 Firebase，账户仅保存在此浏览器中。',
+    'auth.title': '在所有设备上保留你的车站',
+    'search.placeholder': '搜索车站和线路', 'search.empty': '没有与“{q}”匹配的车站或线路。',
+    'search.lines': '线路', 'search.stations': '车站',
+    'footer.data': '数据来自 MTA 公开数据源。', 'footer.disclaimer': '与大都会运输署无隶属关系。',
+    'time.now': '刚刚', 'time.min': '{n} 分钟前', 'time.hr': '{n} 小时前',
+  },
+  ru: {
+    'nav.map': 'Карта', 'nav.status': 'Статус', 'nav.access': 'Доступность', 'nav.saved': 'Избранное',
+    'nav.search': 'Поиск станций', 'nav.signin': 'Войти', 'nav.signout': 'Выйти', 'nav.language': 'Язык',
+    'hero.live': 'Оповещения MTA в реальном времени',
+    'hero.title': 'Узнайте всё о метро, прежде чем пройти турникет.',
+    'hero.lede': 'Изменения в движении, неработающие лифты и ваши станции на одной карте Нью-Йорка.',
+    'hero.find': 'Найти станцию', 'hero.seeStatus': 'Статус линий',
+    'map.lines': 'Линии', 'map.showAll': 'Показать все линии', 'map.zoomIn': 'Приблизить', 'map.zoomOut': 'Отдалить',
+    'map.note': 'Оповещения настоящие. Положение поездов смоделировано.', 'map.ctrlZoom': 'Удерживайте Ctrl и прокручивайте для масштаба',
+    'map.save': 'Сохранить станцию', 'map.saved': 'Сохранено', 'map.noWebgl': 'Этот браузер не может отрисовать карту. Остальная часть страницы работает.',
+    'status.title': 'Статус движения', 'status.summary': 'Нормальное движение на {n} из {total} линий.',
+    'status.updated': 'Обновлено {time}', 'status.refresh': 'Обновить', 'status.all': 'Все линии', 'status.disrupted': 'С нарушениями',
+    'status.sample': 'Не удалось связаться с MTA, показаны примерные данные. Повтор каждую минуту.',
+    'status.good': 'Нормальное движение', 'status.notice': 'Уведомление', 'status.planned': 'Плановые работы', 'status.changes': 'Изменение маршрута',
+    'status.delays': 'Задержки', 'status.suspended': 'Приостановлено', 'status.noneDisrupted': 'Все линии работают нормально.',
+    'status.englishOnly': 'MTA публикует текст оповещений только на английском.',
+    'access.title': 'Лифты и эскалаторы',
+    'access.lede': 'Неисправности, о которых сообщил персонал станций. Обновляется каждые несколько минут.',
+    'access.summary': 'Сейчас не работают {e} лифтов и {s} эскалаторов.',
+    'access.filter': 'Фильтр по станции или линии', 'access.all': 'Все', 'access.elevators': 'Лифты', 'access.escalators': 'Эскалаторы',
+    'access.back': 'Ожидается {when}', 'access.none': 'Нет неисправностей по этому фильтру.', 'access.ada': 'Затрагивает безбарьерный маршрут',
+    'saved.title': 'Ваши станции', 'saved.empty': 'Сохраните станцию на карте или через поиск, и здесь появятся её линии и лифты.',
+    'saved.local': 'Сохранено на этом устройстве. Войдите, чтобы видеть их везде.',
+    'saved.lines': 'Ваши линии', 'saved.alerts': 'Уведомления',
+    'saved.notifyDelays': 'Задержки и остановки на моих линиях', 'saved.notifyPlanned': 'Плановые работы на моих линиях',
+    'saved.notifyElevators': 'Неработающие лифты на моих станциях',
+    'saved.allow': 'Разрешить уведомления', 'saved.blocked': 'Уведомления заблокированы в настройках сайта.',
+    'saved.remove': 'Удалить',
+    'lang.title': 'Transit Hub на вашем языке', 'lang.prompt': 'Куда вы едете?',
+    'auth.signin': 'Войти', 'auth.signup': 'Создать аккаунт', 'auth.email': 'Эл. почта', 'auth.password': 'Пароль',
+    'auth.google': 'Продолжить с Google', 'auth.toSignup': 'Впервые здесь? Создайте аккаунт', 'auth.toSignin': 'Уже есть аккаунт? Войдите',
+    'auth.demo': 'Firebase ещё не настроен, поэтому аккаунты хранятся только в этом браузере.',
+    'auth.title': 'Ваши станции на всех устройствах',
+    'search.placeholder': 'Поиск станций и линий', 'search.empty': 'Нет станций или линий по запросу «{q}».',
+    'search.lines': 'Линии', 'search.stations': 'Станции',
+    'footer.data': 'Данные из открытых источников MTA.', 'footer.disclaimer': 'Не связано с Управлением городского транспорта.',
+    'time.now': 'только что', 'time.min': '{n} мин назад', 'time.hr': '{n} ч назад',
+  },
+  ko: {
+    'nav.map': '지도', 'nav.status': '운행 상황', 'nav.access': '접근성', 'nav.saved': '저장됨',
+    'nav.search': '역 검색', 'nav.signin': '로그인', 'nav.signout': '로그아웃', 'nav.language': '언어',
+    'hero.live': 'MTA 실시간 운행 알림',
+    'hero.title': '개찰구를 지나기 전에 지하철을 확인하세요.',
+    'hero.lede': '운행 변경, 엘리베이터 고장, 자주 가는 역을 뉴욕 지도 한 장에서.',
+    'hero.find': '역 찾기', 'hero.seeStatus': '운행 상황 보기',
+    'map.lines': '노선', 'map.showAll': '전체 노선 보기', 'map.zoomIn': '확대', 'map.zoomOut': '축소',
+    'map.note': '알림은 실시간이며, 열차 위치는 시뮬레이션입니다.', 'map.ctrlZoom': 'Ctrl을 누른 채 스크롤하면 지도가 확대됩니다',
+    'map.save': '역 저장', 'map.saved': '저장됨', 'map.noWebgl': '이 브라우저에서는 지도를 표시할 수 없습니다. 나머지 기능은 사용할 수 있습니다.',
+    'status.title': '운행 상황', 'status.summary': '{total}개 노선 중 {n}개 정상 운행.',
+    'status.updated': '{time} 업데이트', 'status.refresh': '새로고침', 'status.all': '전체 노선', 'status.disrupted': '운행 장애',
+    'status.sample': 'MTA 피드에 연결할 수 없어 예시 데이터를 표시합니다. 1분마다 다시 시도합니다.',
+    'status.good': '정상 운행', 'status.notice': '안내', 'status.planned': '계획 공사', 'status.changes': '운행 변경',
+    'status.delays': '지연', 'status.suspended': '운행 중단', 'status.noneDisrupted': '모든 노선이 정상 운행 중입니다.',
+    'status.englishOnly': 'MTA 알림 내용은 영어로만 제공됩니다.',
+    'access.title': '엘리베이터와 에스컬레이터',
+    'access.lede': '역 직원이 보고한 고장 정보로, 몇 분마다 업데이트됩니다.',
+    'access.summary': '현재 엘리베이터 {e}대, 에스컬레이터 {s}대가 운행 중지 상태입니다.',
+    'access.filter': '역 또는 노선으로 필터', 'access.all': '전체', 'access.elevators': '엘리베이터', 'access.escalators': '에스컬레이터',
+    'access.back': '{when} 복구 예정', 'access.none': '필터와 일치하는 고장이 없습니다.', 'access.ada': '무장애 경로에 영향',
+    'saved.title': '내 역', 'saved.empty': '지도나 검색에서 역을 저장하면 노선과 엘리베이터 정보가 여기에 표시됩니다.',
+    'saved.local': '이 기기에 저장됨. 로그인하면 모든 기기에서 볼 수 있습니다.',
+    'saved.lines': '내 노선', 'saved.alerts': '알림',
+    'saved.notifyDelays': '내 노선의 지연 및 운행 중단', 'saved.notifyPlanned': '내 노선의 계획 공사',
+    'saved.notifyElevators': '내 역의 엘리베이터 고장',
+    'saved.allow': '알림 허용', 'saved.blocked': '브라우저 사이트 설정에서 알림이 차단되어 있습니다.',
+    'saved.remove': '삭제',
+    'lang.title': 'Transit Hub를 내 언어로', 'lang.prompt': '어디로 가세요?',
+    'auth.signin': '로그인', 'auth.signup': '계정 만들기', 'auth.email': '이메일', 'auth.password': '비밀번호',
+    'auth.google': 'Google로 계속하기', 'auth.toSignup': '처음이신가요? 계정 만들기', 'auth.toSignin': '계정이 있나요? 로그인',
+    'auth.demo': 'Firebase가 아직 설정되지 않아 계정은 이 브라우저에만 저장됩니다.',
+    'auth.title': '모든 기기에서 내 역 보기',
+    'search.placeholder': '역과 노선 검색', 'search.empty': '“{q}”와 일치하는 역이나 노선이 없습니다.',
+    'search.lines': '노선', 'search.stations': '역',
+    'footer.data': 'MTA 공개 피드 데이터.', 'footer.disclaimer': '메트로폴리탄 교통공사와 관련이 없습니다.',
+    'time.now': '방금', 'time.min': '{n}분 전', 'time.hr': '{n}시간 전',
+  },
+  ht: {
+    'nav.map': 'Kat', 'nav.status': 'Estati', 'nav.access': 'Aksesiblite', 'nav.saved': 'Anrejistre',
+    'nav.search': 'Chèche estasyon', 'nav.signin': 'Konekte', 'nav.signout': 'Dekonekte', 'nav.language': 'Lang',
+    'hero.live': 'Avètisman sèvis an dirèk MTA',
+    'hero.title': 'Konnen eta tren an anvan ou antre.',
+    'hero.lede': 'Chanjman sèvis, asansè ki pa mache, ak estasyon ou itilize yo, sou yon sèl kat Nouyòk.',
+    'hero.find': 'Jwenn yon estasyon', 'hero.seeStatus': 'Gade estati sèvis la',
+    'map.lines': 'Liy', 'map.showAll': 'Montre tout liy yo', 'map.zoomIn': 'Rapwoche', 'map.zoomOut': 'Elwaye',
+    'map.note': 'Avètisman yo an dirèk. Pozisyon tren yo se yon similasyon.', 'map.ctrlZoom': 'Kenbe Ctrl epi woule pou zoume kat la',
+    'map.save': 'Anrejistre estasyon', 'map.saved': 'Anrejistre', 'map.noWebgl': 'Navigatè sa a pa ka desinen kat la. Rès paj la ap mache.',
+    'status.title': 'Estati sèvis', 'status.summary': 'Bon sèvis sou {n} nan {total} liy.',
+    'status.updated': 'Mete ajou {time}', 'status.refresh': 'Rafrechi', 'status.all': 'Tout liy', 'status.disrupted': 'Gen pwoblèm',
+    'status.sample': 'Nou pa t ka jwenn done MTA yo, se egzanp sa yo ye. N ap eseye ankò chak minit.',
+    'status.good': 'Bon sèvis', 'status.notice': 'Avi', 'status.planned': 'Travay planifye', 'status.changes': 'Chanjman sèvis',
+    'status.delays': 'Reta', 'status.suspended': 'Sispann', 'status.noneDisrupted': 'Tout liy yo ap mache nòmalman.',
+    'status.englishOnly': 'MTA pibliye tèks avètisman yo an angle sèlman.',
+    'access.title': 'Asansè ak eskalye woulan',
+    'access.lede': 'Pàn anplwaye estasyon yo rapòte, mete ajou chak kèk minit.',
+    'access.summary': '{e} asansè ak {s} eskalye woulan pa mache kounye a.',
+    'access.filter': 'Filtre pa estasyon oswa liy', 'access.all': 'Tout', 'access.elevators': 'Asansè', 'access.escalators': 'Eskalye woulan',
+    'access.back': 'Ap retounen {when}', 'access.none': 'Pa gen pàn ki koresponn ak filtè a.', 'access.ada': 'Afekte wout san mach',
+    'saved.title': 'Estasyon ou yo', 'saved.empty': 'Anrejistre yon estasyon sou kat la oswa nan rechèch la, epi liy ak asansè li yo ap parèt la a.',
+    'saved.local': 'Anrejistre sou aparèy sa a. Konekte pou jwenn yo sou tout aparèy.',
+    'saved.lines': 'Liy ou yo', 'saved.alerts': 'Notifikasyon',
+    'saved.notifyDelays': 'Reta ak sispansyon sou liy mwen yo', 'saved.notifyPlanned': 'Travay planifye sou liy mwen yo',
+    'saved.notifyElevators': 'Asansè ki pa mache nan estasyon mwen yo',
+    'saved.allow': 'Pèmèt notifikasyon', 'saved.blocked': 'Notifikasyon yo bloke nan paramèt sit navigatè a.',
+    'saved.remove': 'Retire',
+    'lang.title': 'Sèvi ak Transit Hub nan lang ou', 'lang.prompt': 'Ki kote w prale?',
+    'auth.signin': 'Konekte', 'auth.signup': 'Kreye kont', 'auth.email': 'Imèl', 'auth.password': 'Modpas',
+    'auth.google': 'Kontinye ak Google', 'auth.toSignup': 'Ou nouvo? Kreye yon kont', 'auth.toSignin': 'Ou gen yon kont? Konekte',
+    'auth.demo': 'Firebase poko konfigire, kidonk kont yo rete nan navigatè sa a sèlman.',
+    'auth.title': 'Kenbe estasyon ou yo sou tout aparèy',
+    'search.placeholder': 'Chèche estasyon ak liy', 'search.empty': 'Pa gen estasyon oswa liy ki koresponn ak “{q}”.',
+    'search.lines': 'Liy', 'search.stations': 'Estasyon',
+    'footer.data': 'Done ki soti nan sous piblik MTA yo.', 'footer.disclaimer': 'Pa afilye ak Metropolitan Transportation Authority.',
+    'time.now': 'kounye a', 'time.min': 'sa gen {n} min', 'time.hr': 'sa gen {n} è',
+  },
+};
+
+let current = 'en';
+const listeners = new Set();
+
+export function t(key, vars = {}) {
+  const str = STRINGS[current][key] ?? STRINGS.en[key] ?? key;
+  return str.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+}
+
+export function tIn(lang, key) {
+  return STRINGS[lang]?.[key] ?? STRINGS.en[key];
+}
+
+export function getLang() {
+  return current;
+}
+
+export function setLang(code) {
+  if (!STRINGS[code]) code = 'en';
+  current = code;
+  document.documentElement.lang = code === 'zh' ? 'zh-Hans' : code;
+  try { localStorage.setItem('th.lang', code); } catch {}
+  applyStrings(document);
+  listeners.forEach((fn) => fn(code));
+}
+
+export function onLangChange(fn) {
+  listeners.add(fn);
+}
+
+export function initialLang() {
+  let saved = null;
+  try { saved = localStorage.getItem('th.lang'); } catch {}
+  if (saved && STRINGS[saved]) return saved;
+  const nav = (navigator.language || 'en').slice(0, 2);
+  return STRINGS[nav] ? nav : 'en';
+}
+
+export function applyStrings(root) {
+  root.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  root.querySelectorAll('[data-i18n-placeholder]').forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  root.querySelectorAll('[data-i18n-label]').forEach((el) => { el.setAttribute('aria-label', t(el.dataset.i18nLabel)); });
+}

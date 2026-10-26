@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NYC Transit Hub</title>
+  <meta name="description" content="Live MTA service status, elevator outages, and your saved stations on one map of New York City." />
+  <meta name="theme-color" content="#000000" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23fff' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="ticker" role="region" aria-label="Current service alerts">
+    <div class="ticker-track" id="ticker"></div>
+  </div>
+
+  <header class="nav" id="nav">
+    <a class="brand" href="#map" aria-label="NYC Transit Hub home">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>
+      <span>Transit Hub</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#map" data-i18n="nav.map">Map</a>
+      <a href="#status" data-i18n="nav.status">Status</a>
+      <a href="#access" data-i18n="nav.access">Accessibility</a>
+      <a href="#saved" data-i18n="nav.saved">Saved</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="search-trigger" type="button" data-open-search>
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span data-i18n="nav.search">Search stations</span>
+        <kbd>/</kbd>
+      </button>
+      <label class="lang-select">
+        <span class="sr-only" data-i18n="nav.language">Language</span>
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.8 8h12.4M8 1.8c1.8 1.9 2.6 3.9 2.6 6.2S9.8 12.3 8 14.2C6.2 12.3 5.4 10.3 5.4 8S6.2 3.7 8 1.8Z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+        <select id="lang"></select>
+      </label>
+      <button class="btn btn-light btn-sm" type="button" id="account-btn" data-i18n="nav.signin">Sign in</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="map" aria-labelledby="hero-title">
+      <canvas id="gl" aria-label="Map of New York City subway lines with moving trains" role="img"></canvas>
+      <div class="hero-fade" aria-hidden="true"></div>
+
+      <div class="hero-copy">
+        <p class="live-line"><span class="live-dot" aria-hidden="true"></span><span data-i18n="hero.live">Live service alerts from the MTA</span></p>
+        <h1 id="hero-title" data-i18n="hero.title">Know the subway before you tap in.</h1>
+        <p class="lede" data-i18n="hero.lede">Service changes, elevator outages, and the stations you use, on one map of New York City.</p>
+        <div class="hero-actions">
+          <button class="btn btn-light" type="button" data-open-search><span data-i18n="hero.find">Find a station</span><kbd>/</kbd></button>
+          <a class="btn btn-ghost" href="#status" data-i18n="hero.seeStatus">See service status</a>
+        </div>
+      </div>
+
+      <aside class="map-panel" aria-label="Lines">
+        <div class="panel-head">
+          <h2 data-i18n="map.lines">Lines</h2>
+          <button class="text-btn" type="button" id="show-all" data-i18n="map.showAll" hidden>Show all lines</button>
+        </div>
+        <ul class="legend" id="legend"></ul>
+        <p class="panel-note" data-i18n="map.note">Alerts are live. Train positions are simulated.</p>
+      </aside>
+
+      <div class="map-tools">
+        <button class="icon-btn" type="button" id="zoom-in" data-i18n-label="map.zoomIn"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <button class="icon-btn" type="button" id="zoom-out" data-i18n-label="map.zoomOut"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </div>
+
+      <div class="station-card" id="station-card" hidden></div>
+      <div class="map-tip" id="tooltip" role="status" hidden></div>
+      <div class="map-hint" id="map-hint" data-i18n="map.ctrlZoom" aria-hidden="true">Hold Ctrl and scroll to zoom the map</div>
+      <p class="map-fallback" id="map-fallback" data-i18n="map.noWebgl" hidden>This browser can’t draw the map.</p>
+    </section>
+
+    <section class="section" id="status" aria-labelledby="status-title">
+      <div class="section-head">
+        <div>
+          <h2 id="status-title" data-i18n="status.title">Service status</h2>
+          <p class="section-sub" id="status-summary">&nbsp;</p>
+        </div>
+        <div class="section-tools">
+          <div class="segmented" role="group" aria-label="Filter lines">
+            <button type="button" aria-pressed="true" data-status-filter="all" data-i18n="status.all">All lines</button>
+            <button type="button" aria-pressed="false" data-status-filter="disrupted" data-i18n="status.disrupted">Disrupted</button>
+          </div>
+          <button class="btn btn-ghost btn-sm" type="button" id="refresh">
+            <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.5-3.6M13 2.5v2.8h-2.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-i18n="status.refresh">Refresh</span>
+          </button>
+        </div>
+      </div>
+      <p class="notice" id="status-notice" hidden></p>
+      <div class="status-list" id="status-list" aria-live="polite"></div>
+      <p class="meta" id="status-meta"></p>
+    </section>
+
+    <section class="section" id="access" aria-labelledby="access-title">
+      <div class="section-head">
+        <div>
+          <h2 id="access-title" data-i18n="access.title">Elevators and escalators</h2>
+          <p class="section-sub" data-i18n="access.lede">Outages reported by station staff, refreshed every few minutes.</p>
+        </div>
+      </div>
+      <p class="big-stat" id="access-summary">&nbsp;</p>
+      <div class="access-tools">
+        <label class="field">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span class="sr-only" data-i18n="access.filter">Filter by station or line</span>
+          <input type="search" id="access-filter" data-i18n-placeholder="access.filter" autocomplete="off" />
+        </label>
+        <div class="segmented" role="group" aria-label="Equipment type">
+          <button type="button" aria-pressed="true" data-kind="all" data-i18n="access.all">All</button>
+          <button type="button" aria-pressed="false" data-kind="elevator" data-i18n="access.elevators">Elevators</button>
+          <button type="button" aria-pressed="false" data-kind="escalator" data-i18n="access.escalators">Escalators</button>
+        </div>
+      </div>
+      <div class="access-list" id="access-list"></div>
+      <button class="btn btn-ghost btn-sm more" type="button" id="access-more" hidden></button>
+    </section>
+
+    <section class="section saved" id="saved" aria-labelledby="saved-title">
+      <div class="saved-main">
+        <h2 id="saved-title" data-i18n="saved.title">Your stations</h2>
+        <p class="section-sub" id="saved-sub" data-i18n="saved.local">Saved on this device.</p>
+        <ul class="saved-list" id="saved-list"></ul>
+      </div>
+      <div class="saved-side">
+        <h3 data-i18n="saved.lines">Your lines</h3>
+        <div class="line-picker" id="line-picker"></div>
+        <h3 data-i18n="saved.alerts">Notifications</h3>
+        <div class="prefs" id="prefs">
+          <label class="switch"><input type="checkbox" data-pref="delays" /><span class="track" aria-hidden="true"></span><span data-i18n="saved.notifyDelays">Delays and suspensions on my lines</span></label>
+          <label class="switch"><input type="checkbox" data-pref="planned" /><span class="track" aria-hidden="true"></span><span data-i18n="saved.notifyPlanned">Planned work on my lines</span></label>
+          <label class="switch"><input type="checkbox" data-pref="elevators" /><span class="track" aria-hidden="true"></span><span data-i18n="saved.notifyElevators">Elevator outages at my stations</span></label>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" id="allow-notify" data-i18n="saved.allow" hidden>Allow notifications</button>
+        <p class="meta" id="notify-blocked" data-i18n="saved.blocked" hidden></p>
+      </div>
+    </section>
+
+    <section class="section langs" id="language" aria-labelledby="lang-title">
+      <h2 id="lang-title" data-i18n="lang.title">Use Transit Hub in your language</h2>
+      <ul class="lang-rows" id="lang-rows"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><span data-i18n="footer.data">Data from the MTA’s public feeds.</span> <span data-i18n="footer.disclaimer">Not affiliated with the Metropolitan Transportation Authority.</span></p>
+    <p class="meta" id="footer-mode"></p>
+  </footer>
+
+  <dialog class="palette" id="search" aria-label="Search">
+    <form method="dialog" class="palette-inner">
+      <div class="palette-input">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input id="search-input" type="text" role="combobox" aria-expanded="true" aria-controls="search-results" aria-autocomplete="list" data-i18n-placeholder="search.placeholder" autocomplete="off" spellcheck="false" />
+        <kbd>esc</kbd>
+      </div>
+      <div class="palette-results" id="search-results" role="listbox"></div>
+    </form>
+  </dialog>
+
+  <dialog class="auth" id="auth" aria-labelledby="auth-title">
+    <form class="auth-inner" id="auth-form" novalidate>
+      <button class="icon-btn auth-close" type="button" id="auth-close" aria-label="Close"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <h2 id="auth-title" data-i18n="auth.title">Keep your stations on every device</h2>
+      <button class="btn btn-ghost auth-google" type="button" id="auth-google">
+        <svg viewBox="0 0 18 18" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M17.6 9.2c0-.6-.1-1.2-.2-1.7H9v3.3h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5Z"/><path fill="currentColor" opacity=".75" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.8.9-3.1.9-2.4 0-4.4-1.6-5.1-3.7H.9v2.3A9 9 0 0 0 9 18Z"/><path fill="currentColor" opacity=".55" d="M3.9 10.8a5.4 5.4 0 0 1 0-3.5V5H.9a9 9 0 0 0 0 8.1l3-2.3Z"/><path fill="currentColor" opacity=".9" d="M9 3.6c1.3 0 2.5.5 3.5 1.4L15 2.4A9 9 0 0 0 .9 5l3 2.3C4.6 5.2 6.6 3.6 9 3.6Z"/></svg>
+        <span data-i18n="auth.google">Continue with Google</span>
+      </button>
+      <div class="divider" aria-hidden="true"><span>or</span></div>
+      <label class="stack"><span data-i18n="auth.email">Email</span><input type="email" name="email" autocomplete="email" required /></label>
+      <label class="stack"><span data-i18n="auth.password">Password</span><input type="password" name="password" autocomplete="current-password" minlength="6" required /></label>
+      <p class="form-error" id="auth-error" role="alert" hidden></p>
+      <button class="btn btn-light auth-submit" type="submit" id="auth-submit" data-i18n="auth.signin">Sign in</button>
+      <button class="text-btn" type="button" id="auth-switch" data-i18n="auth.toSignup">New here? Create an account</button>
+      <p class="meta" id="auth-demo" data-i18n="auth.demo" hidden></p>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
